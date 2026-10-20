@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KimCuong Store - Nạp Game</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b0d14;color:#fff;font-family:Arial,sans-serif}
+header{padding:20px;background:#151925;border-bottom:1px solid #303747}
+.logo{font-size:23px;font-weight:900;color:#ffd447}
+.logo span{color:#fff}
+main{max-width:700px;margin:auto;padding:18px}
+.hero{padding:25px 20px;border-radius:18px;background:linear-gradient(135deg,#35200b,#171b2b);border:1px solid #59451e}
+.hero h1{margin:0 0 10px;font-size:27px}
+.hero p{color:#c5c9d5;line-height:1.5}
+.tag{color:#ffd447;font-weight:bold;font-size:12px}
+.panel{margin-top:18px;padding:20px;background:#151925;border:1px solid #2d3444;border-radius:16px}
+h2{font-size:18px;margin-top:0}
+label{display:block;margin:15px 0 8px;color:#cbd0dc;font-size:14px}
+input{width:100%;padding:14px;border-radius:10px;border:1px solid #3a4356;background:#0c1019;color:white;font-size:16px}
+.packages{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pack{padding:15px 8px;border-radius:12px;border:1px solid #343b4d;background:#10141e;color:white;text-align:center;cursor:pointer}
+.pack.active{border:2px solid #ffd447;background:#302818}
+.diamonds{font-size:17px;font-weight:bold;margin-bottom:7px}
+.price{color:#ffd447;font-weight:bold}
+button{width:100%;margin-top:18px;padding:15px;border:0;border-radius:11px;background:#ffd447;color:#17130a;font-weight:bold;font-size:16px;cursor:pointer}
+.note{font-size:12px;color:#9da5b7;line-height:1.6}
+#result{display:none;overflow-wrap:anywhere}
+footer{text-align:center;padding:25px;color:#8991a4;font-size:12px}
+</style>
+</head>
+<body>
+<header><div class="logo">KIMCUONG <span>STORE</span></div></header>
+<main>
+<section class="hero">
+<div class="tag">✦ GAMING TOP-UP</div>
+<h1>NẠP KIM CƯƠNG<br>FREE FIRE</h1>
+<p>Chọn gói nạp yêu thích và nhập đúng ID nhân vật của bạn.</p>
+</section>
+<section class="panel">
+<h2>01. Thông tin nhân vật</h2>
+<label for="uid">UID Free Fire</label>
+<input id="uid" inputmode="numeric" placeholder="Nhập UID của bạn">
+<p class="note">Chỉ nhập UID nhân vật. Không cung cấp mật khẩu tài khoản game.</p>
+</section>
+<section class="panel">
+<h2>02. Chọn gói kim cương</h2>
+<div class="packages" id="packages"></div>
+<label for="contact">Liên hệ (không bắt buộc)</label>
+<input id="contact" placeholder="Zalo hoặc email">
+<button onclick="createOrder()">TẠO ĐƠN HÀNG</button>
+<p class="note">Bản thử nghiệm: giá và gói nạp chỉ mang tính minh họa.</p>
+</section>
+<section class="panel" id="result">
+<h2>Thông tin đơn thử nghiệm</h2>
+<div id="details"></div>
+<p class="note">Đây chưa phải đơn thanh toán thật. Chưa nhận tiền và chưa có giao kim cương.</p>
+<button onclick="resetOrder()">TẠO ĐƠN KHÁC</button>
+</section>
+</main>
+<footer>KimCuong Store · Website thử nghiệm</footer>
+<script>
+const packs=[
+ {name:"50 KC",price:10000},
+ {name:"100 KC",price:20000},
+ {name:"210 KC",price:40000},
+ {name:"420 KC",price:80000},
+ {name:"1000 KC",price:180000},
+ {name:"2100 KC",price:350000}
+];
+let selected=0;
+const money=n=>n.toLocaleString("vi-VN")+"đ";
+function render(){
+ document.getElementById("packages").innerHTML=packs.map((p,i)=>`
+ <button type="button" class="pack ${i===selected?'active':''}" onclick="choose(${i})">
+ <div class="diamonds">💎 ${p.name}</div>
+ <div class="price">${money(p.price)}</div>
+ </button>`).join("");
+}
+function choose(i){selected=i;render()}
+function createOrder(){
+ const uid=document.getElementById("uid").value.trim();
+ if(!/^[0-9]{5,20}$/.test(uid)){
+  alert("Vui lòng nhập UID gồm 5–20 chữ số.");
+  return;
+ }
+ const p=packs[selected];
+ const order="DEMO-"+Date.now().toString().slice(-8);
+ document.getElementById("details").innerHTML=
+ `<p>Mã đơn: <b>${order}</b></p>
+ <p>UID: <b>${uid}</b></p>
+ <p>Gói: <b>${p.name}</b></p>
+ <p>Tổng tiền minh họa: <b>${money(p.price)}</b></p>
+ <p>Trạng thái: <b>Đơn thử nghiệm</b></p>`;
+ document.getElementById("result").style.display="block";
+ document.getElementById("result").scrollIntoView({behavior:"smooth"});
+}
+function resetOrder(){
+ document.getElementById("result").style.display="none";
+}
+render();
+</script>
+</body>
+</html>
